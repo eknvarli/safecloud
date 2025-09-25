@@ -14,6 +14,9 @@ python-dotenv = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 bandit = "*"
 python-multipart = "*"
+pytest = "*"
+pytest-asyncio = "*"
+httpx = "*"
 
 [dev-packages]
 

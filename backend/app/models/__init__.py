@@ -1,1 +1,3 @@
-from app.models.scan_result import ScanResult
+from .scan_result import ScanResult
+
+__all__ = ["Base", "ScanResult"]
