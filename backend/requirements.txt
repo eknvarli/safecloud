@@ -8,3 +8,6 @@ rq
 python-dotenv
 bandit
 python-multipart
+pytest
+pytest-asyncio
+httpx
