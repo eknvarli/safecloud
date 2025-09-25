@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+asyncpg
+pydantic
+redis
+rq
+python-dotenv
+bandit
+python-multipart
