@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.routers import scan
+from app.routers.port_scan_socket import router as port_scan_router
 from app.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,6 +19,7 @@ app.add_middleware(CORSMiddleware,allow_origins=origins,allow_credentials=True,a
 
 
 app.include_router(scan.router, prefix="/scan", tags=["Scan"])
+app.include_router(port_scan_router)
 
 @app.get("/")
 def root():
