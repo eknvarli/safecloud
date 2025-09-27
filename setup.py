@@ -11,7 +11,8 @@ setup(
         "boto3",
         "cryptography",
         "requests",
-        "pyfiglet"
+        "pyfiglet",
+        "dnspython"
     ],
     entry_points={
         "console_scripts": [

@@ -1,5 +1,13 @@
 import socket
 import boto3
+import dns.resolver
+
+DNSBL_PROVIDERS = [
+    "zen.spamhaus.org",
+    "bl.spamcop.net",
+    "dnsbl.sorbs.net",
+    "cbl.abuseat.org",
+]
 
 def scan_ports(ip, ports=[22, 80, 443, 3306, 5432]):
     open_ports = []
@@ -28,3 +36,38 @@ def check_s3(bucket_name):
         return {"bucket": bucket_name, "public": False}
     except Exception as e:
         return {"error": str(e), "public": False}
+    
+def dnsbl_check(ip: str, providers: list | None = None) -> dict:
+    if providers is None:
+        providers = DNSBL_PROVIDERS
+    
+    res = {}
+    try:
+        parts = ip.split(".")
+        if len(parts) != 4:
+            for p in providers:
+                res[p] = "unsupported-ip-version"
+            return res
+        rev = ".".join(reversed(parts))
+    except Exception as e:
+        for p in providers:
+            res[p] = f"error: {e}"
+        return res
+
+    for provider in providers:
+        query = f"{rev}.{provider}"
+        try:
+            answers = dns.resolver.resolve(query, "A")
+            try:
+                txt = dns.resolver.resolve(query, "TXT")
+                txts = [t.to_text().strip('"') for t in txt]
+            except Exception:
+                txts = []
+            res[provider] = {"listed": True, "txt": txts}
+        except dns.resolver.NXDOMAIN:
+            res[provider] = {"listed": False}
+        except dns.resolver.NoAnswer:
+            res[provider] = {"listed": False}
+        except Exception as e:
+            res[provider] = {"error": str(e)}
+    return res
