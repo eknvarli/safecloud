@@ -12,7 +12,8 @@ setup(
         "cryptography",
         "requests",
         "pyfiglet",
-        "dnspython"
+        "dnspython",
+        "gpt4all"
     ],
     entry_points={
         "console_scripts": [

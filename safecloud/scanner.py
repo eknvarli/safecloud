@@ -15,7 +15,6 @@ def scan_ports(ip, ports=[22, 80, 443, 3306, 5432]):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
-
             result = sock.connect_ex((ip, port))
             if result == 0:
                 open_ports.append(port)
@@ -24,6 +23,16 @@ def scan_ports(ip, ports=[22, 80, 443, 3306, 5432]):
             pass
     return open_ports
 
+def grab_banner(ip, port, timeout=1):
+    try:
+        sock = socket.socket()
+        sock.settimeout(timeout)
+        sock.connect((ip, port))
+        banner = sock.recv(1024).decode(errors="ignore")
+        sock.close()
+        return banner.strip()
+    except Exception:
+        return ""
 
 def check_s3(bucket_name):
     s3 = boto3.client("s3")
